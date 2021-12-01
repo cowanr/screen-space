@@ -38,17 +38,25 @@ public class imageService extends HttpServlet {
 			 * System.out.println(filePart.getSize());
 			 * System.out.println(filePart.getContentType());
 			 */
+			String mimeType = filePart.getContentType();
+			if (mimeType.startsWith("image/")) {
+				// It's an image.
 
 			// obtains input stream of the upload file
 			inputStream = filePart.getInputStream();
-			inputStream.read(imageBytes);
-			inputStream.close();
+				inputStream.read(imageBytes);
+				inputStream.close();
 
-			imageDao.uploadImage(imageBytes, uname, filePart.getSize(), filePart.getContentType(), filePart.getName());
+				imageDao.uploadImage(imageBytes, uname, filePart.getSize(), filePart.getContentType(), filePart.getName());
 
-			session.setAttribute("message", "Upload has been done successfully!");
+				session.setAttribute("message", "Upload has been done successfully!");
 
-			response.sendRedirect("wdController");
+				response.sendRedirect("wdController");
+			} else {
+				// It's not an image.
+				session.setAttribute("error", "Only BMP, GIF, JPG, and PNG files are allowed!");
+				response.sendRedirect("wdController");
+			}
 			return;
 
 		} else {

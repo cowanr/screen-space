@@ -27,11 +27,33 @@ public class signupService extends HttpServlet {
 		//System.out.println("signup service Fetched!");
 	
 		try {
+		boolean valid = true;
+
 		String uname = request.getParameter("uname");
 		String pass = request.getParameter("pass");
 		String phone = request.getParameter("phone");
 		String email = request.getParameter("email");
-		
+
+		if(!isValidUname(uname)) {
+			valid = false;
+			request.setAttribute("uname_error", uname);
+		}
+
+		if(!isValidPassword(pass)) {
+			valid = false;
+			request.setAttribute("pass_error", pass);
+		}
+		if(!isValidPhone(phone)) {
+			valid = false;
+			request.setAttribute("phone_error", phone);
+		}
+
+		if(!isValidEmail(email)) {
+			valid = false;
+			request.setAttribute("email_error", email);
+		}
+
+		if(valid) {
 		userDao uDao = new userDao();
 		
 		uDao.setUser(uname, pass, phone, email);
@@ -43,13 +65,41 @@ public class signupService extends HttpServlet {
 		session.setAttribute("email", email);
 		
 		response.sendRedirect("wdController");
-		
+		} else {
+			RequestDispatcher rd;
+			rd = getServletContext().getRequestDispatcher("/");
+			request.setAttribute("email", email);
+			request.setAttribute("uname", uname);
+			request.setAttribute("pass", pass);
+			request.setAttribute("phone", phone);
+			rd.forward(request, response);
+		}
 		}catch(Exception e) {
 			
 			RequestDispatcher rd = request.getRequestDispatcher("loginService");
 			rd.forward(request, response);
 		}
 		
+	}
+
+	private boolean isValidEmail(String email) {
+		String strPattern = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+		return email.matches(strPattern);
+	}
+
+	private boolean isValidPhone(String phone) {
+		String strPattern = "^[0-9]{10}$";
+		return phone.matches(strPattern);
+	}
+
+	private boolean isValidPassword(String pass) {
+		String strPattern = "^[a-zA-Z0-9]{8,20}$";
+		return pass.matches(strPattern);
+	}
+
+	private boolean isValidUname(String uname) {
+		String strPattern = "^[a-zA-Z0-9]{8,20}$";
+		return uname.matches(strPattern);
 	}
 
 	}

@@ -34,6 +34,8 @@
 				<div class="card-body px-5">
 
 					<h3 class="text-center mt-2">Welcome to Screenspace!</h3>
+					<br />
+					<%@include file="components/error.jsp"%>
 					<form name="myform" action="loginController" method="post"
 						onsubmit="return validateform()">
 

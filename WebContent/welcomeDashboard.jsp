@@ -83,6 +83,7 @@
 						class="btn btn-dark" type="submit" value="Upload">
 				</form>
 				<%@include file="components/message.jsp"%>
+				<%@include file="components/error.jsp"%>
 			</div>
 		</div>
 		<hr>
